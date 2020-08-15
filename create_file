@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# create a big file for chunking 
+
+
+for i in {1..10000}; do
+	echo "line number $i" >> merkelfile.txt
+done
+
+echo "File created"
+MERKELFILE_SIZE=$( du -h  merkelfile.txt )
+echo "$MERKELFILE_SIZE"
