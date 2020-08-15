@@ -31,9 +31,29 @@ class MerkelNode(object):
 
 class MerkelTree(object):
     ''' Binary Merkel Tree consisting of Merkel Node ^^^^
+        TODO: HOW TO STORE THE FINAL MERKEL TREE?
     '''
-    def __init__(self):
-        pass
+    def __init__(self, hash_list):
+        self.root = self.gen_tree(hash_list)
+        # treeHash is the root hash
+        self.treeHash = self.root.nodehash
+    
+    def gen_tree(self, hl):
+        # 1. build tree using hl 
+        # where, hl consists of MerkelNodes ^^^
+        # 2. every additional level in tree
+        #    would also be a MerkelNode
+        #    all the way to the root
+        tmp = []
+        if (len(hl) == 1):
+            return hl[0]
+        else:
+            # if its the leaf nodes
+            if len(hl) == XX # XX stands for ini len of hl, 
+                             # UPGRADE: right now it needs to be 2^n
+                for i in range(0,len(hl),2):
+                    tmp.append(
+
 
     pass
 
