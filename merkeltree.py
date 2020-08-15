@@ -34,9 +34,21 @@ class MerkelTree(object):
         TODO: HOW TO STORE THE FINAL MERKEL TREE?
     '''
     def __init__(self, datalst):
-        self.root = self.gen_tree(self.gen_hashlist(datalst))
+        self.root = self.gen_tree(self.gen_hashlist(self.gen_datalist()))
         # treeHash is the root hash
         self.treeHash = self.root.nodehash
+
+    def gen_datalist(f='merkelfile.txt'):
+        CHUNK_SIZE=1024  # bytes , 1KB
+        CHUNKS=[]
+        with open(f, 'rb') as merfile:
+            while True:
+                data = merfile.read(CHUNK_SIZE)
+                if data == b'' :
+                    break
+                CHUNKS.append(data) # read 1024 bytes in one chunk
+        # TODO: make len(CHUNKS) = 2^n
+        return CHUNKS
     
     def gen_hashlist(self, datalst):
         ''' datalst is a list of len = 2^n
