@@ -2,11 +2,12 @@
 
 # create a big file for chunking 
 
-
+FILE=merkelfile.txt
+STRING=""
 for i in {1..10000}; do
-	echo "line number $i" >> merkelfile.txt
+	STRING=${STRING}"line $i"
 done
 
-echo "File created"
-MERKELFILE_SIZE=$( du -h  merkelfile.txt )
+echo "$STRING" > "$FILE"
+MERKELFILE_SIZE=$( du -h $FILE ) 
 echo "$MERKELFILE_SIZE"
