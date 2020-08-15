@@ -2,16 +2,15 @@
 
 import hashlib
 
-# TODO: Only reads every other 1024 byte chunk
-# not all of them, fix required.
 def chunk(f='merkelfile.txt'):
     CHUNK_SIZE=1024  # bytes , 1KB
     CHUNKS=[]
     with open(f, 'rb') as merfile:
         while True:
-            if merfile.read(CHUNK_SIZE) == b'' :
+            data = merfile.read(CHUNK_SIZE)
+            if data == b'' :
                 break
-            CHUNKS.append(merfile.read(CHUNK_SIZE)) # read 1024 bytes in one chunk
+            CHUNKS.append(data) # read 1024 bytes in one chunk
     return CHUNKS
 
 
@@ -34,6 +33,7 @@ def merkeltree(hl):
 
 
 if __name__ == "__main__":
-    merkeltree(hash_chunks(chunk()))
+    hl = hash_chunks(chunk())
+    print(len(hl))
 
 
