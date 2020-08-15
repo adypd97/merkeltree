@@ -33,30 +33,54 @@ class MerkelTree(object):
     ''' Binary Merkel Tree consisting of Merkel Node ^^^^
         TODO: HOW TO STORE THE FINAL MERKEL TREE?
     '''
-    def __init__(self, hash_list):
-        self.root = self.gen_tree(hash_list)
+    def __init__(self, datalst):
+        self.root = self.gen_tree(self.gen_hashlist(datalst))
         # treeHash is the root hash
         self.treeHash = self.root.nodehash
     
+    def gen_hashlist(self, datalst):
+        ''' datalst is a list of len = 2^n
+            which consists of data from 
+            file partitioned into chunks
+            for hashing
+        '''
+        # leaft nodes of MerkelTree generation
+        hashlist = []
+        # assert here that len(datalst) = 2^n
+        for chunk in datalst:
+            nodehash = hashlib.sha256(chunk).digest()
+            hashlist.append(MerkelNode(nodehash=nodehash))
+        return hashlist
+
     def gen_tree(self, hl):
-        # 1. build tree using hl 
-        # where, hl consists of MerkelNodes ^^^
-        # 2. every additional level in tree
-        #    would also be a MerkelNode
-        #    all the way to the root
+        ''' 1. build tree using hl 
+         where, hl consists of MerkelNodes ^^^
+         generated from data chunks of a file
+         2. every additional level in tree
+            would also be a MerkelNode
+            all the way to the root
+        '''
+        # TODO: Has this created a MerkelTree?
+        # ie. can i reach any node from self.root after
+        # this procedure is over.
         tmp = []
         if (len(hl) == 1):
+            # this is root of merkel tree
             return hl[0]
         else:
+            print(hl)
             # if its the leaf nodes
-            if len(hl) == XX # XX stands for ini len of hl, 
+            # TODO: if len(hl) == XX # XX stands for ini len of hl, 
                              # UPGRADE: right now it needs to be 2^n
-                for i in range(0,len(hl),2):
-                    tmp.append(
+            for i in range(0,len(hl),2):
+                tmp.append(MerkelNode(left=hl[i], right=hl[i+1]))
+            return self.gen_tree(tmp)
 
-
-    pass
-
+    def traverse_from_root(self):
+        ''' compare hash of two different merkel trees
+            for data integrity checks,
+        '''
+        pass
 
 if __name__ == "__main__":
     # h1,h2 example hash of file data chunks
