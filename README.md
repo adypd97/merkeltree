@@ -5,6 +5,7 @@
 
 ### References
 - [merkeltreePDF](http://www.mit.edu/~rio/merkle.pdf)
+- [merketreePPT](http://www.cs.tau.ac.il/~msagiv/courses/blockchain/merkel.pdf)
 - [merkeltree1](https://brilliant.org/wiki/merkle-tree/)
 
 toy merkel tree with demo, for fun and learning
