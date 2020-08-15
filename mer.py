@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import hashlib
+import merkeltree
 
 def chunk(f='merkelfile.txt'):
     CHUNK_SIZE=1024  # bytes , 1KB
@@ -17,14 +18,15 @@ def chunk(f='merkelfile.txt'):
 def hash_chunks(l):
     ''' takes a list of file chunks 'l'
         and produces a hash for all of them
-        returning the hash list
+        returning the hash list of leaf MerkelNodes
     '''
     hash_l = []
     for c in l:
-        hash_l.append(hashlib.sha256(c).hexdigest())
+        nodehash = hashlib.sha256(c).digest()
+        hash_l.append(merkeltree.MerkelNode(nodehash=nodehash))
     return hash_l
 
-def merkeltree(hl):
+def test(hl):
     ''' takes a hash list of chunked data
         and produces the ground truth merkel 
         tree
@@ -35,5 +37,3 @@ def merkeltree(hl):
 if __name__ == "__main__":
     hl = hash_chunks(chunk())
     print(len(hl))
-
-

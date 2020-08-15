@@ -2,6 +2,10 @@
 
 import hashlib
 
+''' TODO: We need to build a merkel tree from the bottom up till we 
+    reach the root
+'''
+
 class MerkelNode(object):
     
     def __init__(self, left=None, right=None, nodehash=b''):
@@ -28,12 +32,10 @@ class MerkelNode(object):
 class MerkelTree(object):
     ''' Binary Merkel Tree consisting of Merkel Node ^^^^
     '''
-
     def __init__(self):
         pass
 
     pass
-
 
 
 if __name__ == "__main__":
@@ -45,6 +47,6 @@ if __name__ == "__main__":
     right = MerkelNode(nodehash=h2)
 
     root = MerkelNode(left=left, right=right)
-    print(root.nodehash)
+    #print(root.nodehash)
     
 
