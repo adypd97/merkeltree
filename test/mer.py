@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import hashlib
+import sys
+sys.path.insert(1, '/Users/aditya/Desktop/languages/python/merkeltree')
 import merkeltree
 
 def test_leafnodes():

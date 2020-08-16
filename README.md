@@ -10,6 +10,19 @@
 
 toy merkel tree with demo, for fun and learning
 
+### DEMO
+- There are two files, ```client.py``` and ```server.py```
+- Open two terminals and run both of the above mentioned files
+  in each one like so.
+
+  ```./client.py <clientfile>``` AND ```./server.py <serverfile>```
+- If the two files namely, clientfile.txt and serverfile.txt are exactly 
+  the same then the server would reply with a consistent reponse
+- If not, then the server would respond with an inconsistent reponse
+  and close connection.
+- (UNDER CONSTRUCTION) Server sends back the changed chunks only to the 
+  client so the client can reconstruct with the ground truth file (ie.
+  the serverfile)
 
 ### V0
 -  Support for individual files only. Checks integrity of file.
@@ -32,5 +45,12 @@ toy merkel tree with demo, for fun and learning
 
 ### SOME NOTES
 
-The hashes are stored in the Merkle Tree. They are sent to the client
-on request. 
+- The hashes are stored in the Merkle Tree. They are sent to the client
+  on request. 
+
+- There are two file, clientfile.txt and serverfile.txt. These represent the 
+  the files the client and server has access to respectively. We are trying 
+  to simulate client and server on two different computers that are communicating
+  for the file serverfile.txt( this is the most up to date file, and all clients
+  must have this version to stay up to date).
+

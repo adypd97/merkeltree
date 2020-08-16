@@ -26,6 +26,8 @@ def sender():
         s.connect((HOST, PORT))
         s.sendall(bytes.fromhex(tree.treehash()))
         data = s.recv(1024)
+        if repr(data) == b'inconsistent':
+
 
     print("Received ", repr(data))
 
