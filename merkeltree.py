@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import hashlib
+import os
 from treeError import TreeEmptyError
 
 class MerkelNode(object):
@@ -32,25 +33,28 @@ class MerkelTree(object):
     ''' Binary Merkel Tree consisting of Merkel Node ^^^^
         Root hash represents entire file's hash
     '''
-    def __init__(self, datalst):
-        self.root = self.gen_tree(datalst)
+    def __init__(self, filename):
+        #self.root = self.gen_tree(datalst)
         #self.datalist = self.gen_datalist()
-        #self.hashlist = self.gen_hashlist(self.gen_datalist())
-        #self.root = self.gen_tree(self.hashlist)
+        self.hashlist = self.gen_hashlist(self.gen_datalist(filename))
+        self.root = self.gen_tree(self.hashlist)
         self.treeHash = self.root.nodehash
 
     def treehash(self):
         return self.treeHash
 
     def gen_datalist(self, f='merkelfile.txt'):
-        CHUNK_SIZE=1024  # bytes , 1KB
-        datalist=[]
-        with open(f, 'rb') as merfile:
-            while True:
-                data = merfile.read(CHUNK_SIZE)
-                if data == b'' :
-                    break
-                datalist.append(data) # read 1024 bytes in one chunk
+        if os.path.exists(f):
+            CHUNK_SIZE=1024  # bytes , 1KB
+            datalist=[]
+            with open(f, 'rb') as merfile:
+                while True:
+                    data = merfile.read(CHUNK_SIZE)
+                    if data == b'' :
+                        break
+                    datalist.append(data) # read 1024 bytes in one chunk
+        else:
+            raise FileNotFoundError('File doesnt exist')
         
         return datalist
     
@@ -144,7 +148,8 @@ if __name__ == "__main__":
 
     # its greater than 176 because some nodes hash with themselves
     #tree.traverse()
-    tree.leafNodes()
+    #tree.leafNodes()
+    print(tree.treehash())
 
 
     '''
