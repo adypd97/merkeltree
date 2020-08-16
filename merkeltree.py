@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import hashlib
-from pprint import pprint
 from treeError import TreeEmptyError
 
 class MerkelNode(object):
@@ -40,6 +39,9 @@ class MerkelTree(object):
         self.root = self.gen_tree(self.hashlist)
         self.treeHash = self.root.nodehash
 
+    def treehash(self):
+        return self.treeHash
+
     def gen_datalist(self, f='merkelfile.txt'):
         CHUNK_SIZE=1024  # bytes , 1KB
         datalist=[]
@@ -53,14 +55,12 @@ class MerkelTree(object):
         return datalist
     
     def gen_hashlist(self, datalist):
-        ''' datalst is a list of len = 2^n
-            which consists of data from 
+        ''' input: datlist
+            consists of data from 
             file partitioned into chunks
             for hashing
         '''
-        # leaft nodes of MerkelTree generation
         hashlist = []
-        # assert here that len(datalst) = 2^n
         for chunk in datalist:
             nodehash = hashlib.sha256(chunk).digest()
             hashlist.append(MerkelNode(nodehash=nodehash))
@@ -75,9 +75,9 @@ class MerkelTree(object):
             all the way to the root
         '''
         tmp = []
-        if (len(hl) == 0):
+        if len(hl) == 0:
             raise TreeEmptyError('Hashlist is empty')
-        if (len(hl) == 1):
+        if len(hl) == 1:
             # this is root of merkel tree
             return hl[0]
         else:
@@ -93,20 +93,57 @@ class MerkelTree(object):
                         continue
                     tmp.append(MerkelNode(left=hl[i], right=hl[i+1]))
                 tmp.append(MerkelNode(left=hl[len(hl)-1], right=hl[len(hl)-1]))
-            #pprint([o for o in hl])
             return self.gen_tree(tmp)
 
-    def traverse_from_root(self):
+    def leafNodes(self):
+        ''' return a list of leaf nodes'''
+        if self.root is not None:
+            self._leafNodes(self.root)
+        else:
+            raise TreeEmptyError("Tree doesn't exist")
+
+    def _leafNodes(self, node):
+        if node.left == None and node.right == None:
+            self.printNode(node)
+            return
+        else:
+            self._leafNodes(node.left)
+            self._leafNodes(node.right)
+
+
+    def traverse(self):
         ''' compare hash of two different merkel trees
             for data integrity checks,
         '''
-        pass
+        if self.root is not None:
+            self._traverse(self.root)
+        else:
+            raise TreeEmptyError("Tree doesn't exist")
+
+    def _traverse(self, node):
+        if node is not None:
+            self._traverse(node.left)
+            self.printNode(node)
+            self._traverse(node.right)
+
+    def printNode(self, node):
+        print("NODE HASH: ", node.nodehash)
 
 if __name__ == "__main__":
     tree = MerkelTree()
-    ''' tree.Hash of merkefile.txt = e1c81aa08c932e34d5c4aa4cceb568db9ab3675902b27e1cdb64c884f0458c70'''
-    print(tree.treeHash)
-'''
+
+    #print(tree.treehash())
+    # got 255 unique (all) hash values
+    # TODO: Check correctness of traverse()
+    # looks like its should be less because we only create 
+    # 87 + 44 + 22 + 11 + 6 + 3 + 2 + 1 = 176 nodes
+
+    # its greater than 176 because some nodes hash with themselves
+    #tree.traverse()
+    tree.leafNodes()
+
+
+    '''
     # h1,h2 example hash of file data chunks
     h1 = hashlib.sha256(b'1'*1024).digest()
     h2 = hashlib.sha256(b'2'*1024).digest()
@@ -115,23 +152,23 @@ if __name__ == "__main__":
     left = MerkelNode(nodehash=h1)
     middle = MerkelNode(nodehash=h2)
     right = MerkelNode(nodehash=h3)
-    
     hl = [left, middle, right]
 
-    #tree = MerkelTree(hl)
-    #print(tree.treeHash)
+    tree = MerkelTree(hl)
+    #print("TREE HASH: ", tree.treehash())
+    tree.traverse()
 
     hl_1 = [left, middle]
     tree_1 = MerkelTree(hl_1)
-    print("LEFT ", tree_1.root.nodehash == tree.root.left.nodehash)
+    #print("LEFT ", tree_1.root.nodehash == tree.root.left.nodehash)
 
     hl_2 = [right, right]
     tree_2 = MerkelTree(hl_2)
-    print(tree_2.root.nodehash)
-    print(tree.root.right.nodehash)
-    print("RIGHT ", tree_2.root.nodehash == tree.root.right.nodehash)
+    #print(tree_2.root.nodehash)
+    #print(tree.root.right.nodehash)
+    #print("RIGHT ", tree_2.root.nodehash == tree.root.right.nodehash)
 
     hl_3 = [tree_1.root, tree_2.root]
     final = MerkelTree(hl_3)
-    print("FINAL ", final.root.nodehash == tree.root.nodehash)
-'''
+    #print("FINAL ", final.root.nodehash == tree.root.nodehash)
+    '''
