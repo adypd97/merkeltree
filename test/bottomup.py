@@ -27,7 +27,9 @@ def twoatatimesum1(l):
         return 0
     else:
         print(l)
-        for i in range(0,len(l),2):
+        for i in range(0,len(l)-1):
+            if i % 2 != 0:
+                continue
             s.append(l[i] + l[i+1])
         return twoatatimesum1(s)
 
