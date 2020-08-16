@@ -28,7 +28,7 @@ toy merkel tree with demo, for fun and learning
          requests further hashes down to the leaf nodes of merkel tree 
          to find out which chunk(s) of data were changed.
  STEP 4: Then it requests for those chunks only. On receiving 
-         it recalculates the hashes.
+         the server recalculates the root hash.
 
 ### SOME NOTES
 
