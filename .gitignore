@@ -3,3 +3,6 @@ merkelfile.txt
 __pycache__
 findTODO.sh
 hashout
+hashlist2
+hashlist.txt
+.DS_Store

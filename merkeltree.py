@@ -32,11 +32,11 @@ class MerkelTree(object):
     ''' Binary Merkel Tree consisting of Merkel Node ^^^^
         Root hash represents entire file's hash
     '''
-    def __init__(self):
-        #self.root = self.gen_tree(datalst)
+    def __init__(self, datalst):
+        self.root = self.gen_tree(datalst)
         #self.datalist = self.gen_datalist()
-        self.hashlist = self.gen_hashlist(self.gen_datalist())
-        self.root = self.gen_tree(self.hashlist)
+        #self.hashlist = self.gen_hashlist(self.gen_datalist())
+        #self.root = self.gen_tree(self.hashlist)
         self.treeHash = self.root.nodehash
 
     def treehash(self):
@@ -62,7 +62,9 @@ class MerkelTree(object):
         '''
         hashlist = []
         for chunk in datalist:
-            nodehash = hashlib.sha256(chunk).digest()
+            sha = hashlib.sha256()
+            sha.update(str(chunk).encode('utf-8'))
+            nodehash = sha.hexdigest()
             hashlist.append(MerkelNode(nodehash=nodehash))
         return hashlist
 
@@ -128,6 +130,8 @@ class MerkelTree(object):
 
     def printNode(self, node):
         print("NODE HASH: ", node.nodehash)
+
+
 
 if __name__ == "__main__":
     tree = MerkelTree()
