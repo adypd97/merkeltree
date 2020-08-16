@@ -1,4 +1,5 @@
-merkelfile.txt
+clientfile.txt
+serverfile.txt
 .*.swp
 __pycache__
 findTODO.sh
