@@ -4,6 +4,7 @@ import socket
 import merkeltree
 import os
 import sys
+import pickle
 
 # tryhashes
 # if the root hash fails
@@ -27,9 +28,10 @@ def getfile():
         print('Provide file, please')
         sys.exit()
     
+HOST = '127.0.0.1'
+PORT = 65000
 def sender():
-    HOST = '127.0.0.1'
-    PORT = 65000
+    global HOST, PORT
     # compute hash on the fly, return root of merkletree
     tree = merkeltree.MerkelTree(getfile())
 
@@ -41,12 +43,18 @@ def sender():
         if data.decode('utf-8') == 'inconsistent':
             print("BAAB")
             # send the merkledict
-            # ===> s.sendall(tree.merkledict)
-            # now receive the chunks 
-            # then, recompute updated hash
-            # finally, send this hash back
-            # to recheck consistency
-            # exit.
+            s.sendall(pickle.dumps(tree.merkledict, -1))
+            #sender_merkledict(tree)
+    print("Received ", repr(data))
+
+def sender_merkledict(tree):
+    global HOST, PORT
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+        s.sendall(pickle.dumps(tree.merkledict, -1))
+        data = s.recv(1024)
+        if data.decode('utf-8') == 'consistent':
+            print("done")
 
     print("Received ", repr(data))
 
