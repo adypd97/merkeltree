@@ -3,6 +3,30 @@
 import socket
 import merkeltree
 from client import getfile
+'''
+class Socket():
+    HOST = '127.0.0.1'
+    PORT = 65000
+    def __init__(self):
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    def connect(self):
+        return self.socket.connect((self.HOST, self.PORT))
+
+    def send_data(self, data):
+        self.socket.sendall(bytes.fromhex(data))
+
+
+    def receive_data(self):
+        data = self.socket.recv(1024)
+        self.check(data.decode('utf-8'))
+
+    def check(self, data):
+        if data == 'inconsistent':
+            print("BAAD")
+        else:
+            print("Received ", data)
+'''
 
 def listener():
     HOST = '127.0.0.1'

@@ -198,6 +198,10 @@ class MerkelTree(object):
     def printNode(self, node):
         print("NODE HASH: ", node.nodehash)
 
+    def isLeaf(self, hashval):
+        ''' given hashval, is it leaf node '''
+        return hashval in self.dictionary.keys()
+
 
 
 if __name__ == "__main__":

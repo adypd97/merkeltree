@@ -1,5 +1,6 @@
 clientfile.txt
 serverfile.txt
+note
 .*.swp
 __pycache__
 findTODO.sh
