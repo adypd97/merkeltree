@@ -2,25 +2,9 @@
 
 import hashlib
 from pprint import pprint
-
-''' TODO: We need to build a merkel tree from the bottom up till we 
-    reach the root
-'''
-class TreeEmptyError(Exception):
-    def __init__(self, *args):
-        if args:
-            self.error = args[0]
-        else:
-            self.error = None
-    def __str__(self):
-        if self.error:
-            return 'TreeEmptyError, {0}'.format(self.error)
-        else:
-            return 'TreeEmptyError was raised'
-
+from treeError import TreeEmptyError
 
 class MerkelNode(object):
-    
     def __init__(self, left=None, right=None, nodehash=b''):
         ''' A node consists of pointer to left subtree
             and right subtree and the combined hash of 
@@ -47,27 +31,28 @@ class MerkelNode(object):
 
 class MerkelTree(object):
     ''' Binary Merkel Tree consisting of Merkel Node ^^^^
-        TODO: HOW TO STORE THE FINAL MERKEL TREE?
+        Root hash represents entire file's hash
     '''
-    def __init__(self, datalst):
-        #self.root = self.gen_tree(self.gen_hashlist(self.gen_datalist()))
-        self.root = self.gen_tree(datalst)
-        # treeHash is the root hash
+    def __init__(self):
+        #self.root = self.gen_tree(datalst)
+        #self.datalist = self.gen_datalist()
+        self.hashlist = self.gen_hashlist(self.gen_datalist())
+        self.root = self.gen_tree(self.hashlist)
         self.treeHash = self.root.nodehash
 
-    def gen_datalist(f='merkelfile.txt'):
+    def gen_datalist(self, f='merkelfile.txt'):
         CHUNK_SIZE=1024  # bytes , 1KB
-        CHUNKS=[]
+        datalist=[]
         with open(f, 'rb') as merfile:
             while True:
                 data = merfile.read(CHUNK_SIZE)
                 if data == b'' :
                     break
-                CHUNKS.append(data) # read 1024 bytes in one chunk
+                datalist.append(data) # read 1024 bytes in one chunk
         
-        return CHUNKS
+        return datalist
     
-    def gen_hashlist(self, datalst):
+    def gen_hashlist(self, datalist):
         ''' datalst is a list of len = 2^n
             which consists of data from 
             file partitioned into chunks
@@ -76,7 +61,7 @@ class MerkelTree(object):
         # leaft nodes of MerkelTree generation
         hashlist = []
         # assert here that len(datalst) = 2^n
-        for chunk in datalst:
+        for chunk in datalist:
             nodehash = hashlib.sha256(chunk).digest()
             hashlist.append(MerkelNode(nodehash=nodehash))
         return hashlist
@@ -118,6 +103,10 @@ class MerkelTree(object):
         pass
 
 if __name__ == "__main__":
+    tree = MerkelTree()
+    ''' tree.Hash of merkefile.txt = e1c81aa08c932e34d5c4aa4cceb568db9ab3675902b27e1cdb64c884f0458c70'''
+    print(tree.treeHash)
+'''
     # h1,h2 example hash of file data chunks
     h1 = hashlib.sha256(b'1'*1024).digest()
     h2 = hashlib.sha256(b'2'*1024).digest()
@@ -129,10 +118,9 @@ if __name__ == "__main__":
     
     hl = [left, middle, right]
 
-    tree = MerkelTree(hl)
+    #tree = MerkelTree(hl)
+    #print(tree.treeHash)
 
-    print(tree.treeHash)
-'''
     hl_1 = [left, middle]
     tree_1 = MerkelTree(hl_1)
     print("LEFT ", tree_1.root.nodehash == tree.root.left.nodehash)
